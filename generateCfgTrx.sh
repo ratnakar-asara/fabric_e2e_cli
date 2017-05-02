@@ -63,10 +63,6 @@ function generateCerts (){
 	echo "##########################################################"
 	$CRYPTOGEN generate --config=./crypto-config.yaml
 	echo
-        cp ./crypto-config/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/msp/signcerts/peer0.org1.example.com-cert.pem ./crypto-config/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/msp/admincerts/peer0.org1.example.com-cert.pem
-        cp ./crypto-config/peerOrganizations/org1.example.com/peers/peer1.org1.example.com/msp/signcerts/peer1.org1.example.com-cert.pem ./crypto-config/peerOrganizations/org1.example.com/peers/peer1.org1.example.com/msp/admincerts/peer0.org1.example.com-cert.pem
-        cp ./crypto-config/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/msp/signcerts/peer0.org2.example.com-cert.pem ./crypto-config/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/msp/admincerts/peer0.org2.example.com-cert.pem
-        cp ./crypto-config/peerOrganizations/org2.example.com/peers/peer1.org2.example.com/msp/signcerts/peer1.org2.example.com-cert.pem ./crypto-config/peerOrganizations/org2.example.com/peers/peer1.org2.example.com/msp/admincerts/peer1.org2.example.com-cert.pem
 }
 
 ## Generate orderer genesis block , channel configuration transaction and anchor peer update transactions

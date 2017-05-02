@@ -8,7 +8,7 @@ services:
       - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-server
     ports:
       - "7054:7054"
-    command: sh -c 'fabric-ca-server start --ca.certfile /etc/hyperledger/fabric-ca-server-config/org1.example.com-cert.pem --ca.keyfile /etc/hyperledger/fabric-ca-server-config/e4808a82c6008761cf7533c1a1dcb9a0d6caf5229bd61293591e17fb88ac69c0_sk -b admin:adminpw' -d
+    command: sh -c 'fabric-ca-server start --ca.certfile /etc/hyperledger/fabric-ca-server-config/org1.example.com-cert.pem --ca.keyfile /etc/hyperledger/fabric-ca-server-config/85f3694445fab6e8b0b5f052932aa85e7481fff388a8364b847cbb1b315e460e_sk -b admin:adminpw' -d
     volumes:
       - ./crypto-config/peerOrganizations/org1.example.com/ca:/etc/hyperledger/fabric-ca-server-config
     container_name: ca_peerOrg1
@@ -19,7 +19,7 @@ services:
       - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-server
     ports:
       - "8054:7054"
-    command: sh -c 'fabric-ca-server start --ca.certfile /etc/hyperledger/fabric-ca-server-config/org2.example.com-cert.pem --ca.keyfile /etc/hyperledger/fabric-ca-server-config/0c037bb41e88b7ac6501a532d504d3cb9d70144fdc63ac89916c4dc8f6618add_sk -b admin:adminpw' -d
+    command: sh -c 'fabric-ca-server start --ca.certfile /etc/hyperledger/fabric-ca-server-config/org2.example.com-cert.pem --ca.keyfile /etc/hyperledger/fabric-ca-server-config/cc4c0a89e7de2757564d8172f5857a81bfc115b45a4eed35439b02c57850a1cc_sk -b admin:adminpw' -d
     volumes:
       - ./crypto-config/peerOrganizations/org2.example.com/ca:/etc/hyperledger/fabric-ca-server-config
     container_name: ca_peerOrg2
@@ -206,7 +206,7 @@ services:
       - CORE_PEER_TLS_CERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/server.crt
       - CORE_PEER_TLS_KEY_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/server.key
       - CORE_PEER_TLS_ROOTCERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt
-      - CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/msp
+      - CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp
     working_dir: /opt/gopath/src/github.com/hyperledger/fabric/peer
     command: /bin/bash -c './scripts/script.sh ${CHANNEL_NAME}; sleep $TIMEOUT'
     volumes:
