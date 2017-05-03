@@ -10,6 +10,8 @@ export FABRIC_ROOT=$PWD/../..
 export FABRIC_CFG_PATH=$PWD
 echo
 
+OS_ARCH=$(echo "$(uname -s)-$(uname -m | sed 's/x86_64/amd64/g')" | awk '{print tolower($0)}')
+
 ## Using docker-compose template replace private key file names with constants
 function replacePrivateKey () {
 	ARCH=`uname -s | grep Darwin`
@@ -34,14 +36,13 @@ function replacePrivateKey () {
 
 ## Generates Org certs using cryptogen tool
 function generateCerts (){
-	CRYPTOGEN=`which cryptogen || /bin/true`
+	CRYPTOGEN=$FABRIC_ROOT/release/$OS_ARCH/bin/cryptogen
 
-	if [ "$CRYPTOGEN" == "" ]; then
-	    echo "Building cryptogen"
-	    make -C $FABRIC_ROOT cryptogen
-	    CRYPTOGEN=$FABRIC_ROOT/build/bin/cryptogen
-	else
+	if [ -f "$CRYPTOGEN" ]; then
             echo "Using cryptogen -> $CRYPTOGEN"
+	else
+	    echo "Building cryptogen"
+	    make -C $FABRIC_ROOT release-all
 	fi
 
 	echo
@@ -55,14 +56,12 @@ function generateCerts (){
 ## Generate orderer genesis block , channel configuration transaction and anchor peer update transactions
 function generateChannelArtifacts() {
 
-	CONFIGTXGEN=`which configtxgen || /bin/true`
-
-	if [ "$CONFIGTXGEN" == "" ]; then
-	    echo "Building configtxgen"
-	    make -C $FABRIC_ROOT configtxgen
-	    CONFIGTXGEN=$FABRIC_ROOT/build/bin/configtxgen
-	else
+	CONFIGTXGEN=$FABRIC_ROOT/release/$OS_ARCH/bin/configtxgen
+	if [ -f "$CONFIGTXGEN" ]; then
             echo "Using configtxgen -> $CONFIGTXGEN"
+	else
+	    echo "Building configtxgen"
+	    make -C $FABRIC_ROOT release-all
 	fi
 
 	echo "##########################################################"
