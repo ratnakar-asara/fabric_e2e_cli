@@ -19,17 +19,17 @@ function replacePrivateKey () {
 		OPTS="-i"
 	fi
 
-	cp docker-compose-template.yaml docker-compose.yaml
+	cp docker-compose-e2e-template.yaml docker-compose-e2e.yaml
 
         CURRENT_DIR=$PWD
         cd crypto-config/peerOrganizations/org1.example.com/ca/
         PRIV_KEY=$(ls *_sk)
         cd $CURRENT_DIR
-        sed $OPTS "s/CA1_PRIVATE_KEY/${PRIV_KEY}/g" docker-compose.yaml
+        sed $OPTS "s/CA1_PRIVATE_KEY/${PRIV_KEY}/g" docker-compose-e2e.yaml
         cd crypto-config/peerOrganizations/org2.example.com/ca/
         PRIV_KEY=$(ls *_sk)
         cd $CURRENT_DIR
-        sed $OPTS "s/CA2_PRIVATE_KEY/${PRIV_KEY}/g" docker-compose.yaml
+        sed $OPTS "s/CA2_PRIVATE_KEY/${PRIV_KEY}/g" docker-compose-e2e.yaml
 }
 
 ## Generates Org certs using cryptogen tool
@@ -68,7 +68,7 @@ function generateChannelArtifacts() {
 	echo "##########################################################"
 	echo "#########  Generating Orderer Genesis block ##############"
 	echo "##########################################################"
-	$CONFIGTXGEN -profile TwoOrgsOrdererGenesis -outputBlock ./channel-artifacts/orderer.block
+	$CONFIGTXGEN -profile TwoOrgsOrdererGenesis -outputBlock ./channel-artifacts/orderer.genesis.block
 
 	echo
 	echo "#################################################################"

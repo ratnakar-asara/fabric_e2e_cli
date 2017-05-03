@@ -5,7 +5,9 @@ CH_NAME="$2"
 CLI_TIMEOUT="$3"
 
 : ${CLI_TIMEOUT:="10000"}
-COMPOSE_FILE=docker-compose.yaml
+
+COMPOSE_FILE=docker-compose-cli.yaml
+#COMPOSE_FILE=docker-compose-e2e.yaml
 
 function printHelp () {
 	echo "Usage: ./network_setup <up|down> <channel-name>"
@@ -42,7 +44,7 @@ function removeUnwantedImages() {
 }
 
 function networkUp () {
-    #Lets generate all the artifacts which includes org certs, orderer.block,
+    #Lets generate all the artifacts which includes org certs, orderer genesis block,
     # channel configuration transaction and Also generate a docker-compose file
     source generateArtifacts.sh $CH_NAME
 
@@ -64,7 +66,7 @@ function networkDown () {
     removeUnwantedImages
 
     # remove orderer block and other channel configuration transactions and certs
-    rm -rf channel-artifacts/orderer.block channel-artifacts/*.tx crypto-config
+    rm -rf channel-artifacts/*.block channel-artifacts/*.tx crypto-config
 }
 
 validateArgs
