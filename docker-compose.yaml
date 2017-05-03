@@ -8,7 +8,7 @@ services:
       - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-server
     ports:
       - "7054:7054"
-    command: sh -c 'fabric-ca-server start --ca.certfile /etc/hyperledger/fabric-ca-server-config/org1.example.com-cert.pem --ca.keyfile /etc/hyperledger/fabric-ca-server-config/85f3694445fab6e8b0b5f052932aa85e7481fff388a8364b847cbb1b315e460e_sk -b admin:adminpw' -d
+    command: sh -c 'fabric-ca-server start --ca.certfile /etc/hyperledger/fabric-ca-server-config/org1.example.com-cert.pem --ca.keyfile /etc/hyperledger/fabric-ca-server-config/05675129e3f986aed43438ff893e648275dcf49dafdf44ac8082a401ca91a4b6_sk -b admin:adminpw' -d
     volumes:
       - ./crypto-config/peerOrganizations/org1.example.com/ca:/etc/hyperledger/fabric-ca-server-config
     container_name: ca_peerOrg1
@@ -19,7 +19,7 @@ services:
       - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-server
     ports:
       - "8054:7054"
-    command: sh -c 'fabric-ca-server start --ca.certfile /etc/hyperledger/fabric-ca-server-config/org2.example.com-cert.pem --ca.keyfile /etc/hyperledger/fabric-ca-server-config/cc4c0a89e7de2757564d8172f5857a81bfc115b45a4eed35439b02c57850a1cc_sk -b admin:adminpw' -d
+    command: sh -c 'fabric-ca-server start --ca.certfile /etc/hyperledger/fabric-ca-server-config/org2.example.com-cert.pem --ca.keyfile /etc/hyperledger/fabric-ca-server-config/58275cc1ce19fdbd25f4ecf66041e7ad85f64fc67c51e4e294531bb04140145f_sk -b admin:adminpw' -d
     volumes:
       - ./crypto-config/peerOrganizations/org2.example.com/ca:/etc/hyperledger/fabric-ca-server-config
     container_name: ca_peerOrg2
@@ -42,7 +42,7 @@ services:
     working_dir: /opt/gopath/src/github.com/hyperledger/fabric
     command: orderer
     volumes:
-    - ./orderer.block:/var/hyperledger/orderer/orderer.block
+    - ./channel-artifacts/orderer.block:/var/hyperledger/orderer/orderer.block
     - ./crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/msp:/var/hyperledger/orderer/msp
     - ./crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/tls/:/var/hyperledger/orderer/tls
     ports:
@@ -194,12 +194,9 @@ services:
     tty: true
     environment:
       - GOPATH=/opt/gopath
-      - CORE_PEER_ADDRESSAUTODETECT=true
       - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
       - CORE_LOGGING_LEVEL=DEBUG
-      - CORE_NEXT=true
       - CORE_PEER_ID=cli
-      - CORE_PEER_ENDORSER_ENABLED=true
       - CORE_PEER_ADDRESS=peer0.org1.example.com:7051
       - CORE_PEER_LOCALMSPID=Org0MSP
       - CORE_PEER_TLS_ENABLED=true
@@ -214,9 +211,7 @@ services:
         - ./examples:/opt/gopath/src/github.com/hyperledger/fabric/examples
         - ./crypto-config:/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/
         - ./scripts:/opt/gopath/src/github.com/hyperledger/fabric/peer/scripts/
-        - ./channel.tx:/opt/gopath/src/github.com/hyperledger/fabric/peer/channel.tx
-        - ./Org0MSPanchors.tx:/opt/gopath/src/github.com/hyperledger/fabric/peer/Org0MSPanchors.tx
-        - ./Org1MSPanchors.tx:/opt/gopath/src/github.com/hyperledger/fabric/peer/Org1MSPanchors.tx
+        - ./channel-artifacts:/opt/gopath/src/github.com/hyperledger/fabric/peer/channel-artifacts
     depends_on:
       - orderer.example.com
       - peer0.org1.example.com

@@ -42,7 +42,7 @@ services:
     working_dir: /opt/gopath/src/github.com/hyperledger/fabric
     command: orderer
     volumes:
-    - ./orderer.block:/var/hyperledger/orderer/orderer.block
+    - ./channel-artifacts/orderer.block:/var/hyperledger/orderer/orderer.block
     - ./crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/msp:/var/hyperledger/orderer/msp
     - ./crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/tls/:/var/hyperledger/orderer/tls
     ports:
@@ -211,9 +211,7 @@ services:
         - ./examples:/opt/gopath/src/github.com/hyperledger/fabric/examples
         - ./crypto-config:/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/
         - ./scripts:/opt/gopath/src/github.com/hyperledger/fabric/peer/scripts/
-        - ./channel.tx:/opt/gopath/src/github.com/hyperledger/fabric/peer/channel.tx
-        - ./Org0MSPanchors.tx:/opt/gopath/src/github.com/hyperledger/fabric/peer/Org0MSPanchors.tx
-        - ./Org1MSPanchors.tx:/opt/gopath/src/github.com/hyperledger/fabric/peer/Org1MSPanchors.tx
+        - ./channel-artifacts:/opt/gopath/src/github.com/hyperledger/fabric/peer/channel-artifacts
     depends_on:
       - orderer.example.com
       - peer0.org1.example.com

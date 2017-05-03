@@ -68,25 +68,25 @@ function generateChannelArtifacts() {
 	echo "##########################################################"
 	echo "#########  Generating Orderer Genesis block ##############"
 	echo "##########################################################"
-	$CONFIGTXGEN -profile TwoOrgsOrdererGenesis -outputBlock orderer.block
+	$CONFIGTXGEN -profile TwoOrgsOrdererGenesis -outputBlock ./channel-artifacts/orderer.block
 
 	echo
 	echo "#################################################################"
 	echo "### Generating channel configuration transaction 'channel.tx' ###"
 	echo "#################################################################"
-	$CONFIGTXGEN -profile TwoOrgsChannel -outputCreateChannelTx channel.tx -channelID $CHANNEL_NAME
+	$CONFIGTXGEN -profile TwoOrgsChannel -outputCreateChannelTx ./channel-artifacts/channel.tx -channelID $CHANNEL_NAME
 
 	echo
 	echo "#################################################################"
 	echo "#######    Generating anchor peer update for Org0MSP   ##########"
 	echo "#################################################################"
-	$CONFIGTXGEN -profile TwoOrgsChannel -outputAnchorPeersUpdate Org0MSPanchors.tx -channelID $CHANNEL_NAME -asOrg Org0MSP
+	$CONFIGTXGEN -profile TwoOrgsChannel -outputAnchorPeersUpdate ./channel-artifacts/Org0MSPanchors.tx -channelID $CHANNEL_NAME -asOrg Org0MSP
 
 	echo
 	echo "#################################################################"
 	echo "#######    Generating anchor peer update for Org1MSP   ##########"
 	echo "#################################################################"
-	$CONFIGTXGEN -profile TwoOrgsChannel -outputAnchorPeersUpdate Org1MSPanchors.tx -channelID $CHANNEL_NAME -asOrg Org1MSP
+	$CONFIGTXGEN -profile TwoOrgsChannel -outputAnchorPeersUpdate ./channel-artifacts/Org1MSPanchors.tx -channelID $CHANNEL_NAME -asOrg Org1MSP
 	echo
 }
 

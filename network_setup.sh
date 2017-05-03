@@ -44,7 +44,7 @@ function removeUnwantedImages() {
 function networkUp () {
     #Lets generate all the artifacts which includes org certs, orderer.block,
     # channel configuration transaction and Also generate a docker-compose file
-    source generateCfgTrx.sh $CH_NAME
+    source generateArtifacts.sh $CH_NAME
 
     CHANNEL_NAME=$CH_NAME TIMEOUT=$CLI_TIMEOUT docker-compose -f $COMPOSE_FILE up -d 2>&1
     if [ $? -ne 0 ]; then
@@ -63,8 +63,8 @@ function networkDown () {
     #Cleanup images
     removeUnwantedImages
 
-    # remove orderer block and other channel configuration transactions
-    rm -rf orderer.block channel.tx crypto-config Org0MSPanchors.tx Org1MSPanchors.tx
+    # remove orderer block and other channel configuration transactions and certs
+    rm -rf channel-artifacts/orderer.block channel-artifacts/*.tx crypto-config
 }
 
 validateArgs
