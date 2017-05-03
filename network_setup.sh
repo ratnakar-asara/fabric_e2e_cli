@@ -44,8 +44,8 @@ function removeUnwantedImages() {
 }
 
 function networkUp () {
-    #Lets generate all the artifacts which includes org certs, orderer genesis block,
-    # channel configuration transaction and Also generate a docker-compose file
+    #Generate all the artifacts that includes org certs, orderer genesis block,
+    # channel configuration transaction
     source generateArtifacts.sh $CH_NAME
 
     CHANNEL_NAME=$CH_NAME TIMEOUT=$CLI_TIMEOUT docker-compose -f $COMPOSE_FILE up -d 2>&1
