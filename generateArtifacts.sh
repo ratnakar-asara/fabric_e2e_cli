@@ -2,8 +2,8 @@
 
 #set -e
 
-: ${CHANNEL_NAME:="mychannel"}
 CHANNEL_NAME=$1
+: ${CHANNEL_NAME:="mychannel"}
 echo $CHANNEL_NAME
 
 export FABRIC_ROOT=$PWD/../..
@@ -77,15 +77,15 @@ function generateChannelArtifacts() {
 
 	echo
 	echo "#################################################################"
-	echo "#######    Generating anchor peer update for Org0MSP   ##########"
-	echo "#################################################################"
-	$CONFIGTXGEN -profile TwoOrgsChannel -outputAnchorPeersUpdate ./channel-artifacts/Org0MSPanchors.tx -channelID $CHANNEL_NAME -asOrg Org0MSP
-
-	echo
-	echo "#################################################################"
 	echo "#######    Generating anchor peer update for Org1MSP   ##########"
 	echo "#################################################################"
 	$CONFIGTXGEN -profile TwoOrgsChannel -outputAnchorPeersUpdate ./channel-artifacts/Org1MSPanchors.tx -channelID $CHANNEL_NAME -asOrg Org1MSP
+
+	echo
+	echo "#################################################################"
+	echo "#######    Generating anchor peer update for Org2MSP   ##########"
+	echo "#################################################################"
+	$CONFIGTXGEN -profile TwoOrgsChannel -outputAnchorPeersUpdate ./channel-artifacts/Org2MSPanchors.tx -channelID $CHANNEL_NAME -asOrg Org2MSP
 	echo
 }
 

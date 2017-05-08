@@ -2,11 +2,45 @@ version: '2'
 
 services:
 
+  zookeeper:
+    extends:
+      file:   base/docker-compose-base.yaml
+      service: zookeeper
+    container_name: zookeeper
+
+  kafka0:
+    extends:
+      file:   base/docker-compose-base.yaml
+      service: kafka0
+    container_name: kafka0
+    depends_on:
+      - zookeeper
+
+  kafka1:
+    extends:
+      file:   base/docker-compose-base.yaml
+      service: kafka1
+    container_name: kafka1
+    depends_on:
+      - zookeeper
+
+  kafka2:
+    extends:
+      file:   base/docker-compose-base.yaml
+      service: kafka2
+    container_name: kafka2
+    depends_on:
+      - zookeeper
+
   orderer.example.com:
     extends:
       file:   base/docker-compose-base.yaml
       service: orderer.example.com
     container_name: orderer.example.com
+    depends_on:
+      - kafka0
+      - kafka1
+      - kafka2
 
   peer0.org1.example.com:
     container_name: peer0.org1.example.com
@@ -34,7 +68,7 @@ services:
 
   cli:
     container_name: cli
-    image: hyperledger/fabric-peer
+    image: hyperledger/fabric-testenv
     tty: true
     environment:
       - GOPATH=/opt/gopath
@@ -42,8 +76,8 @@ services:
       - CORE_LOGGING_LEVEL=DEBUG
       - CORE_PEER_ID=cli
       - CORE_PEER_ADDRESS=peer0.org1.example.com:7051
-      - CORE_PEER_LOCALMSPID=Org0MSP
-      - CORE_PEER_TLS_ENABLED=true
+      - CORE_PEER_LOCALMSPID=Org1MSP
+      - CORE_PEER_TLS_ENABLED=false
       - CORE_PEER_TLS_CERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/server.crt
       - CORE_PEER_TLS_KEY_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/server.key
       - CORE_PEER_TLS_ROOTCERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt
