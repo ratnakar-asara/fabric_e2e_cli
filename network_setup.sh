@@ -1,29 +1,66 @@
 #!/bin/bash
 
-UP_DOWN="$1"
-CH_NAME="$2"
-CLI_TIMEOUT="$3"
-
-: ${CLI_TIMEOUT:="10000"}
-
-COMPOSE_FILE=docker-compose-cli.yaml
-#COMPOSE_FILE=docker-compose-e2e.yaml
-
-function printHelp () {
-	echo "Usage: ./network_setup <up|down> <channel-name>"
+function usage () {
+	echo
+	echo "======================================================================================================"
+	echo "Usage: "
+	echo "      network_setup.sh -n [channel-name] -s -c -t [cli timer] -f [compose yaml] <up|down|retstart>"
+	echo
+	echo "      ./network_setup.sh -n "mychannel" -c -s -t 10  restart"
+	echo
+	echo "		-n       channel name"
+	echo "		-c       enable couchdb"
+	echo "		-f       Docker compose file for the network"
+	echo "		-s       Enable TLS"
+	echo "		-t       CLI container timeout"
+	echo "		up       Launch the network and start the test"
+	echo "		down     teardown the network and the test"
+	echo "		retstart Restart the network and start the test"
+	echo "======================================================================================================"
+	echo
 }
 
-function validateArgs () {
-	if [ -z "${UP_DOWN}" ]; then
-		echo "Option up / down / restart not mentioned"
-		printHelp
-		exit 1
-	fi
-	if [ -z "${CH_NAME}" ]; then
-		echo "setting to default channel 'mychannel'"
-		CH_NAME=mychannel
-	fi
-}
+##process all the options
+while getopts "scn:f:t:h" opt; do
+  case "${opt}" in
+    n)
+      CH_NAME="$OPTARG"
+      ;;
+    c)
+      COUCHDB="y" ## enable couchdb
+      ;;
+    t)
+      CLI_TIMEOUT=$OPTARG ## CLI container timeout
+      ;;
+    s)
+      SECURITY="y" #Enable TLS
+      ;;
+    h)
+      usage
+      exit 1
+      ;;
+    f)
+      COMPOSE_FILE="$OPTARG"
+      ;;
+    \?)
+      echo "Invalid option: -$OPTARG" >&2
+      usage
+      exit 1
+      ;;
+  esac
+done
+
+## this is to read the argument up/down/restart
+shift $((OPTIND-1))
+UP_DOWN="$@"
+
+##Set Defaults
+: ${CH_NAME:="mychannel"}
+: ${SECURITY:="n"}
+: ${COMPOSE_FILE:="docker-compose-cli.yaml"}
+: ${UP_DOWN:="restart"}
+: ${CLI_TIMEOUT:="2"} ## Increase timeout for debugging purposes
+: ${COUCHDB:="n"}
 
 function clearContainers () {
         CONTAINER_IDS=$(docker ps -aq)
@@ -47,14 +84,22 @@ function networkUp () {
     #Generate all the artifacts that includes org certs, orderer genesis block,
     # channel configuration transaction
     source generateArtifacts.sh $CH_NAME
-
-    CHANNEL_NAME=$CH_NAME TIMEOUT=$CLI_TIMEOUT docker-compose -f $COMPOSE_FILE up -d 2>&1
-    #CHANNEL_NAME=$CH_NAME TIMEOUT=$CLI_TIMEOUT docker-compose -f $COMPOSE_FILE -f docker-compose-couch.yaml up -d 2>&1
-    if [ $? -ne 0 ]; then
-	echo "ERROR !!!! Unable to pull the images "
-	exit 1
+    if [ "$SECURITY" == "y" -o "$SECURITY" == "Y" ]; then
+        SECURITY=true
+    else
+        SECURITY=false
     fi
-    docker logs -f cli
+    if [ "$COUCHDB" == "y" -o "$COUCHDB" == "Y" ]; then
+       ENABLE_TLS=$SECURITY CHANNEL_NAME=$CH_NAME TIMEOUT=$CLI_TIMEOUT docker-compose -f $COMPOSE_FILE -f docker-compose-couch.yaml up -d 2>&1
+    else
+       ENABLE_TLS=$SECURITY CHANNEL_NAME=$CH_NAME TIMEOUT=$CLI_TIMEOUT docker-compose -f $COMPOSE_FILE up -d 2>&1
+    fi
+
+    if [ $? -ne 0 ]; then
+	    echo "ERROR !!!! Unable to pull the images "
+	    exit 1
+    fi
+    docker logs -f cli | tee cli_logs.txt
 }
 
 function networkDown () {
@@ -67,10 +112,8 @@ function networkDown () {
     removeUnwantedImages
 
     # remove orderer block and other channel configuration transactions and certs
-    rm -rf channel-artifacts/*.block channel-artifacts/*.tx crypto-config
+    rm -rf channel-artifacts/*.block channel-artifacts/*.tx crypto-config cli_logs.txt
 }
-
-validateArgs
 
 #Create the network using docker compose
 if [ "${UP_DOWN}" == "up" ]; then
@@ -81,6 +124,6 @@ elif [ "${UP_DOWN}" == "restart" ]; then ## Restart the network
 	networkDown
 	networkUp
 else
-	printHelp
+	usage
 	exit 1
 fi

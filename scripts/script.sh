@@ -1,5 +1,5 @@
 #!/bin/bash
-
+START_TIME=$(date +%s)
 echo
 echo " ____    _____      _      ____    _____           _____   ____    _____ "
 echo "/ ___|  |_   _|    / \    |  _ \  |_   _|         | ____| |___ \  | ____|"
@@ -22,6 +22,7 @@ verifyResult () {
 		echo "!!!!!!!!!!!!!!! "$2" !!!!!!!!!!!!!!!!"
                 echo "================== ERROR !!! FAILED to execute End-2-End Scenario =================="
 		echo
+		echo "Execution time $(($(date +%s)-START_TIME)) secs"
    		exit 1
 	fi
 }
@@ -165,6 +166,7 @@ chaincodeQuery () {
 	echo "!!!!!!!!!!!!!!! Query result on PEER$PEER is INVALID !!!!!!!!!!!!!!!!"
         echo "================== ERROR !!! FAILED to execute End-2-End Scenario =================="
 	echo
+	echo "Execution time $(($(date +%s)-START_TIME)) secs"
 	exit 1
   fi
 }
@@ -218,9 +220,11 @@ installChaincode 3
 chaincodeQuery 3 90
 
 echo
+echo "Total execution time $(($(date +%s)-START_TIME)) secs"
+echo
 echo "===================== All GOOD, End-2-End execution completed ===================== "
 echo
-
+echo
 echo
 echo " _____   _   _   ____            _____   ____    _____ "
 echo "| ____| | \ | | |  _ \          | ____| |___ \  | ____|"
@@ -228,5 +232,4 @@ echo "|  _|   |  \| | | | | |  _____  |  _|     __) | |  _|  "
 echo "| |___  | |\  | | |_| | |_____| | |___   / __/  | |___ "
 echo "|_____| |_| \_| |____/          |_____| |_____| |_____|"
 echo
-
 exit 0
