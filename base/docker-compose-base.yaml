@@ -2,10 +2,38 @@ version: '2'
 
 services:
 
-  zookeeper:
+  zookeeper0:
     image: hyperledger/fabric-zookeeper
+    environment:
+      - ZOO_MY_ID=1
+      - ZOO_PORT=2181
+      - ZOO_SERVERS=server.1=zookeeper0:2182:2183:participant server.2=zookeeper1:3182:3183:participant server.3=zookeeper2:4182:4183:participant
     ports:
       - 2181:2181
+      - 2182:2182
+      - 2183:2183
+
+  zookeeper1:
+    image: hyperledger/fabric-zookeeper
+    environment:
+      - ZOO_MY_ID=2
+      - ZOO_PORT=3181
+      - ZOO_SERVERS=server.1=zookeeper0:2182:2183:participant server.2=zookeeper1:3182:3183:participant server.3=zookeeper2:4182:4183:participant
+    ports:
+      - 3181:3181
+      - 3182:3182
+      - 3183:3183
+
+  zookeeper2:
+    image: hyperledger/fabric-zookeeper
+    environment:
+      - ZOO_MY_ID=3
+      - ZOO_PORT=4181
+      - ZOO_SERVERS=server.1=zookeeper0:2182:2183:participant server.2=zookeeper1:3182:3183:participant server.3=zookeeper2:4182:4183:participant
+    ports:
+      - 4181:4181
+      - 4182:4182
+      - 4183:4183
 
   kafka0:
     image: hyperledger/fabric-kafka
@@ -15,7 +43,7 @@ services:
       - KAFKA_MESSAGE_MAX_BYTES=103809024
       - KAFKA_REPLICA_FETCH_MAX_BYTES=103809024
       - KAFKA_UNCLEAN_LEADER_ELECTION_ENABLE=false
-      - KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181
+      - KAFKA_ZOOKEEPER_CONNECT=zookeeper0:2181,zookeeper1:3181,zookeeper2:4181
     ports:
       - 9092:9092
 
@@ -27,7 +55,7 @@ services:
       - KAFKA_MESSAGE_MAX_BYTES=103809024
       - KAFKA_REPLICA_FETCH_MAX_BYTES=103809024
       - KAFKA_UNCLEAN_LEADER_ELECTION_ENABLE=false
-      - KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181
+      - KAFKA_ZOOKEEPER_CONNECT=zookeeper0:2181,zookeeper1:3181,zookeeper2:4181
     ports:
       - 9094:9092
 
@@ -39,7 +67,7 @@ services:
       - KAFKA_MESSAGE_MAX_BYTES=103809024
       - KAFKA_REPLICA_FETCH_MAX_BYTES=103809024
       - KAFKA_UNCLEAN_LEADER_ELECTION_ENABLE=false
-      - KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181
+      - KAFKA_ZOOKEEPER_CONNECT=zookeeper0:2181,zookeeper1:3181,zookeeper2:4181
     ports:
       - 9096:9092
 
