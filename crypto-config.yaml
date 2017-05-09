@@ -76,3 +76,12 @@ PeerOrgs:
       Count: 2
     Users:
       Count: 1
+  # ---------------------------------------------------------------------------
+  # Org3: See "Org1" for full specification
+  # ---------------------------------------------------------------------------
+  - Name: Org3
+    Domain: org3.example.com
+    Template:
+      Count: 2
+    Users:
+      Count: 1

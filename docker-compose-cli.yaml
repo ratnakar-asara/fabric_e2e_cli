@@ -104,6 +104,18 @@ services:
       file:  base/docker-compose-base.yaml
       service: peer1.org2.example.com
 
+  peer0.org3.example.com:
+    container_name: peer0.org3.example.com
+    extends:
+      file:  base/docker-compose-base.yaml
+      service: peer0.org3.example.com
+
+  peer1.org3.example.com:
+    container_name: peer1.org3.example.com
+    extends:
+      file:  base/docker-compose-base.yaml
+      service: peer1.org3.example.com
+
   cli:
     container_name: cli
     image: hyperledger/fabric-testenv
