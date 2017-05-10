@@ -15,7 +15,7 @@ function usage () {
 	echo "		-t       CLI container timeout"
 	echo "		up       Launch the network and start the test"
 	echo "		down     teardown the network and the test"
-	echo "		retstart Restart the network and start the test"
+	echo "		restart  Restart the network and start the test"
 	echo "======================================================================================================"
 	echo
 }
