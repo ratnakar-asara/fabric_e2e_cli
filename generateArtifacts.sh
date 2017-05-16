@@ -33,11 +33,6 @@ function replacePrivateKey () {
     PRIV_KEY=$(ls *_sk)
     cd $CURRENT_DIR
     sed $OPTS "s/CA2_PRIVATE_KEY/${PRIV_KEY}/g" docker-compose-e2e.yaml
-
-    cd crypto-config/peerOrganizations/org3.example.com/ca/
-    PRIV_KEY=$(ls *_sk)
-    cd $CURRENT_DIR
-    sed $OPTS "s/CA3_PRIVATE_KEY/${PRIV_KEY}/g" docker-compose-e2e.yaml
 }
 
 ## Generates Org certs using cryptogen tool
@@ -83,11 +78,11 @@ function generateChannelArtifacts() {
 
 	echo
 	echo "#################################################################"
-	echo "### Generating anchor peer update for Org1MSP/Org2MSP/Org3MSP ###"
+	echo "##### Generating anchor peer update for Org1MSP/Org2MSP      ####"
 	echo "#################################################################"
-	for orgMsp in Org1MSP Org2MSP Org3MSP ; do
+	for orgMsp in Org1MSP Org2MSP ; do
 	    $CONFIGTXGEN -profile TwoOrgsChannel -outputAnchorPeersUpdate ./channel-artifacts/${orgMsp}anchors.tx -channelID $CHANNEL_NAME -asOrg $orgMsp
-    done
+        done
 	echo
 	echo
 }

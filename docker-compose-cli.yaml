@@ -104,18 +104,6 @@ services:
       file:  base/docker-compose-base.yaml
       service: peer1.org2.example.com
 
-  peer0.org3.example.com:
-    container_name: peer0.org3.example.com
-    extends:
-      file:  base/docker-compose-base.yaml
-      service: peer0.org3.example.com
-
-  peer1.org3.example.com:
-    container_name: peer1.org3.example.com
-    extends:
-      file:  base/docker-compose-base.yaml
-      service: peer1.org3.example.com
-
   cli:
     container_name: cli
     image: hyperledger/fabric-testenv
@@ -134,6 +122,7 @@ services:
       - CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp
     working_dir: /opt/gopath/src/github.com/hyperledger/fabric/peer
     command: /bin/bash -c './scripts/script.sh ${CHANNEL_NAME}; sleep $TIMEOUT'
+    #command: /bin/bash -c 'apt-get update && apt-get install -y jq && ./scripts/auctionTest.sh ${CHANNEL_NAME}; sleep $TIMEOUT'
     volumes:
         - /var/run/:/host/var/run/
         - ./examples:/opt/gopath/src/github.com/hyperledger/fabric/examples
